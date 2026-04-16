@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import Sidebar from '@/components/dashboard/Sidebar'; 
-import HandTracker from '@/components/dashboard/HandTracker'; // 1. IMPORT ADDED
+import HandTracker from '@/components/dashboard/HandTracker'; 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
@@ -64,7 +64,7 @@ export default function SenyasIO() {
               </CardHeader>
               <CardContent className="p-10 flex flex-col items-center gap-10">
                 
-                {/* 2. HAND TRACKER REPLACED THE OLD VIDEO DIV */}
+                {/* HAND TRACKER COMPONENT - No more old video tags! */}
                 <HandTracker setDetectedWord={setDetectedWord} />
 
                 <div className={`w-full flex flex-col items-center py-8 rounded-[32px] border ${isDarkMode ? 'bg-black/40 border-white/5' : 'bg-neutral-100 border-neutral-200'}`}>
