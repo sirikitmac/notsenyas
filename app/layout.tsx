@@ -27,6 +27,13 @@ export default function RootLayout({
       inter.variable,
       "font-sans"
     )}>
+      <head>
+        {/* MediaPipe Scripts: BEFORE INTERACTIVE ensures they load BEFORE your tracker code runs */}
+        <Script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" strategy="beforeInteractive" />
+        <Script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" strategy="beforeInteractive" />
+        <Script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" strategy="beforeInteractive" />
+        <Script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" strategy="beforeInteractive" />
+      </head>
       <body className="min-h-full flex flex-col bg-background text-foreground transition-colors duration-300">
         <ThemeProvider 
           attribute="class" 
@@ -36,11 +43,6 @@ export default function RootLayout({
         >
           {children}
         </ThemeProvider>
-
-        {/* MediaPipe Scripts */}
-        <Script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" strategy="lazyOnload" />
-        <Script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" strategy="lazyOnload" />
-        <Script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" strategy="lazyOnload" />
       </body>
     </html>
   );

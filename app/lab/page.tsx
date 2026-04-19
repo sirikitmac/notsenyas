@@ -7,8 +7,8 @@ import Sidebar from '@/components/dashboard/Sidebar';
 import QuickMessages from '@/components/dashboard/QuickMessages'; 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-// Stable HandTracker Import
 const HandTracker = dynamic(() => import('@/components/dashboard/HandTracker'), {
   ssr: false,
 });
@@ -22,8 +22,21 @@ export default function SenyasIO() {
   const [showQuickMessages, setShowQuickMessages] = useState(false);
   const [detectedWord, setDetectedWord] = useState("Awaiting Gesture...");
   const [voiceEnabled, setVoiceEnabled] = useState(false);
+  
+  // Voice selection state
+  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+  const [selectedVoice, setSelectedVoice] = useState<string>('');
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    setMounted(true);
+    const loadVoices = () => {
+      const available = window.speechSynthesis.getVoices();
+      setVoices(available);
+      if (available.length > 0 && !selectedVoice) setSelectedVoice(available[0].name);
+    };
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+    loadVoices();
+  }, [selectedVoice]);
 
   const startResizing = useCallback((mouseDownEvent: React.MouseEvent) => {
     mouseDownEvent.preventDefault();
@@ -57,18 +70,35 @@ export default function SenyasIO() {
               <Card className={`w-full backdrop-blur-2xl shadow-2xl rounded-[40px] overflow-hidden transition-colors duration-500 
                 ${isDarkMode ? 'bg-neutral-900/50 border-white/10' : 'bg-white border-neutral-200'}`}>
                 
-                <CardHeader className="flex flex-row items-center justify-between pb-4 border-b border-white/5">
-                  <CardTitle className="text-xs font-bold tracking-[0.2em] uppercase">Sign Translator System</CardTitle>
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center space-x-2">
-                        <span className="text-xs font-medium opacity-50">Camera</span>
-                        <Switch checked={isCameraOn} onCheckedChange={setIsCameraOn} />
+                <CardHeader className="flex flex-col gap-4 pb-4 border-b border-white/5">
+                  <div className="flex flex-row items-center justify-between w-full">
+                    <CardTitle className="text-xs font-bold tracking-[0.2em] uppercase">Sign Translator System</CardTitle>
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center space-x-2">
+                          <span className="text-xs font-medium opacity-50">Camera</span>
+                          <Switch checked={isCameraOn} onCheckedChange={setIsCameraOn} />
+                      </div>
+                      <div className="flex items-center space-x-2">
+                          <span className="text-xs font-medium opacity-50">Audio</span>
+                          <Switch checked={voiceEnabled} onCheckedChange={setVoiceEnabled} className="data-[state=checked]:bg-green-500" />
+                      </div>
                     </div>
-                    <div className="flex items-center space-x-2">
-                        <span className="text-xs font-medium opacity-50">Audio</span>
-                        {/* Audio Switch uses green accent */}
-                        <Switch checked={voiceEnabled} onCheckedChange={setVoiceEnabled} className="data-[state=checked]:bg-green-500" />
-                    </div>
+                  </div>
+
+                  {/* GLASSMORPHISM VOICE SELECTOR */}
+                  <div className="w-full">
+                    <Select value={selectedVoice} onValueChange={setSelectedVoice}>
+                      <SelectTrigger className={`w-full border ${isDarkMode ? 'bg-neutral-950/50 border-white/10' : 'bg-neutral-100 border-neutral-200'}`}>
+                        <SelectValue placeholder="Select Voice" />
+                      </SelectTrigger>
+                      <SelectContent className={`backdrop-blur-xl border ${isDarkMode ? 'bg-neutral-900/70 border-white/10 text-white' : 'bg-white/70 border-neutral-200 text-neutral-900'}`}>
+                        {voices.map((v) => (
+                          <SelectItem key={v.name} value={v.name} className="cursor-pointer hover:bg-green-500/10 focus:bg-green-500/20">
+                            {v.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                 </CardHeader>
                 
@@ -80,7 +110,6 @@ export default function SenyasIO() {
                     <p className="text-3xl font-bold tracking-tight">{detectedWord}</p>
                   </div>
 
-                  {/* Main Action Button - Green Theme */}
                   <button 
                     onClick={() => setShowQuickMessages(!showQuickMessages)}
                     className={`w-full h-16 rounded-full font-black text-white text-lg transition-all duration-300 shadow-xl 
@@ -94,7 +123,7 @@ export default function SenyasIO() {
 
               {showQuickMessages && (
                 <div className="mt-6 animate-in slide-in-from-top-4 duration-300">
-                  <QuickMessages />
+                  <QuickMessages selectedVoice={selectedVoice} />
                 </div>
               )}
             </div>
@@ -106,7 +135,7 @@ export default function SenyasIO() {
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         isDarkMode={isDarkMode}
-        setIsDarkMode={() => {}} // Controlled by useTheme
+        setIsDarkMode={() => {}}
         sidebarWidth={sidebarWidth}
         startResizing={startResizing}
       />

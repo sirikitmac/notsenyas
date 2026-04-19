@@ -9,11 +9,17 @@ const MESSAGES = [
   { label: "Thank You", text: "Thank you so much." },
 ];
 
-export default function QuickMessages() {
+export default function QuickMessages({ selectedVoice }: { selectedVoice: string }) {
   const speak = (text: string) => {
     if (typeof window !== 'undefined') {
       const speech = new SpeechSynthesisUtterance(text);
       speech.rate = 0.9;
+      
+      // Find the voice
+      const voices = window.speechSynthesis.getVoices();
+      const voice = voices.find(v => v.name === selectedVoice);
+      if (voice) speech.voice = voice;
+      
       window.speechSynthesis.speak(speech);
     }
   };
