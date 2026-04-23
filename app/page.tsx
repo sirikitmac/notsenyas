@@ -3,13 +3,13 @@
 import { useState, useEffect } from 'react';
 import HeroSectionOne from "@/components/hero-section-demo-1";
 import { DashboardStats } from "@/components/DashboardStats";
+import HoverFooter from "@/components/ui/HoverFooter" // This will now light up
 import { useTheme } from "next-themes";
 
 export default function LandingPage() {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  // Prevents the "flash" of incorrect colors during load
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -17,7 +17,6 @@ export default function LandingPage() {
   if (!mounted) return null;
 
   return (
-    // bg-background and text-foreground automatically switch based on your dark mode setting
     <main className="relative w-full min-h-screen flex flex-col items-center bg-background text-foreground transition-colors duration-500 overflow-hidden pb-10">
       
       {/* 1. Hero Content */}
@@ -31,6 +30,9 @@ export default function LandingPage() {
 
         <DashboardStats />
       </section>
+
+      {/* 3. ADD FOOTER HERE */}
+      <HoverFooter />
       
     </main>
   );
