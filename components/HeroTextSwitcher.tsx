@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-// Note: We are importing from the new file we just created
-import { Highlight } from "@/components/ui/hero-highlight";
 
 const words = ["Simple", "Fast", "Accessible"];
 
@@ -28,9 +26,9 @@ export const HeroTextSwitcher = () => {
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.4 }}
         >
-          <Highlight className="text-black dark:text-white">
+          <span className="relative inline-block px-2 pb-1 rounded-lg bg-gradient-to-r from-pink-300 to-pink-500 text-white">
             {words[index]}
-          </Highlight>
+          </span>
         </motion.div>
       </AnimatePresence>
     </div>
