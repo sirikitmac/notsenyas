@@ -8,7 +8,6 @@ export default function HeroSectionOne() {
   return (
     <div className="flex flex-col items-center justify-center px-6 w-full max-w-4xl mx-auto pt-32 pb-16 text-center">
       
-      {/* Floating animation wrapper */}
       <div className="flex flex-col items-center text-center animate-float">
         <h1 className="text-5xl font-bold tracking-tight text-foreground md:text-7xl mb-8">
           <span className="text-[#ffb3c6]">Senyas.IO</span><br/>
@@ -37,9 +36,12 @@ export default function HeroSectionOne() {
           </Link>
           
           <div className="flex gap-4 mt-2">
-            <button className="glass px-8 py-3 rounded-full text-foreground font-medium text-sm transition-all duration-300 hover:scale-110 border border-transparent hover:border-foreground/10">
-              Explore
-            </button>
+            {/* ✅ Explore now links to ASL detector */}
+            <Link href="/asl">
+              <button className="glass px-8 py-3 rounded-full text-foreground font-medium text-sm transition-all duration-300 hover:scale-110 border border-transparent hover:border-foreground/10">
+                Explore
+              </button>
+            </Link>
             <button className="glass px-8 py-3 rounded-full text-foreground font-medium text-sm transition-all duration-300 hover:scale-110 border border-transparent hover:border-foreground/10">
               Support
             </button>
